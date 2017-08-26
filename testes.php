@@ -42,9 +42,9 @@ $boleto = [
 	//moeda
 	'codigo_moeda_cnab'							=> '9',
 	//beneficiario
-	'cpf_cnpj_beneficiario'						=> '08734949000127',
-	'agencia_beneficiario'						=> '0814',
-	'conta_beneficiario'						=> '0034716', 
+	'cpf_cnpj_beneficiario'						=> '08734539000127',
+	'agencia_beneficiario'						=> '0534',
+	'conta_beneficiario'						=> '0034536', 
 	'digito_verificador_conta_beneficiario'		=> '7',
 	//juros
 	'tipo_juros'								=> 5,
@@ -104,7 +104,7 @@ curl_setopt_array($curl, array(
     "accept: application/vnd.itau",
     "access_token: 690f6f394886f3f61e112d1c3d650408  ",
     "identificador: 08734949000127",
-    "itau-chave: 9a6a013b-54df-49a5-bf99-f674761f5775",
+    "itau-chave: 9a6a013b-54df-49a5-bf99-f6235235f5775",
   ),
 ));
 
