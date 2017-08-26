@@ -20,6 +20,7 @@ class EnviaRemessa {
 			$boleto->setTipoCobranca($data['tipo_cobranca']);
 			$boleto->setTipoProduto($data['tipo_produto']);
 			$boleto->setSubProduto($data['subproduto']);
+			$boleto->setTipoPagamento($data['tipo_pagamento']);
 
 			//setando o beneficiario
 			$beneficiario = new Beneficiario();
@@ -68,12 +69,29 @@ class EnviaRemessa {
 			$juros->setTipoJuros($data['tipo_juros']);
 			
 			$boleto->setJuros($juros);
+
+			//setando o juros
+			$multa = new Multa();
+			$multa->setTipoMulta($data['tipo_multa']);
+			
+			$boleto->setMulta($multa);
 			
 			//setando o grupo de desconto
 			$grupoDesconto = new GrupoDesconto();
 			$grupoDesconto->setTipoDesconto($data['tipo_desconto']);
 
 			$boleto->setGrupoDesconto($grupoDesconto);
+
+			//setando os recebimentos divergente
+			$recebimentoDivergente = new RecebimentoDivergente();
+			$recebimentoDivergente->setTipoAutorizacaoRecebimento($data['tipo_autorizacao_recebimento']);
+			$recebimentoDivergente->setTipoValorPercentualRecebimento($data['tipo_valor_percentual_recebimento']);
+			$recebimentoDivergente->setValorMinimoRecebimento($data['valor_minimo_recebimento']);
+			$recebimentoDivergente->setPercentualMinimoRecebimento($data['percentual_minimo_recebimento']);
+			$recebimentoDivergente->setValorMaximoRecebimento($data['valor_maximo_recebimento']);
+			$recebimentoDivergente->setPercentualMaximoRecebimento($data['percentual_maximo_recebimento']);
+
+			$boleto->setRecebimentoDivergente($recebimentoDivergente);
 
 
 			//adicionando boleto na remessa
@@ -88,25 +106,7 @@ class EnviaRemessa {
 	}
 
 	public function envia() {
-
+		
 	}
-
-	private static function toArray($object) {
-    $reflectionClass = new \ReflectionClass($object);
-
-    $properties = $reflectionClass->getProperties();
-
-    $array = [];
-    foreach ($properties as $property) {
-        $property->setAccessible(true);
-        $value = $property->getValue($object);
-        if (is_object($value)) {
-            $array[$property->getName()] = self::toArray($value);
-        } else {
-            $array[$property->getName()] = $value;
-        }
-    }
-    return $array;
-}
 
 }

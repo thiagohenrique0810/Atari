@@ -5,8 +5,8 @@ class ConsultaToken {
 
 	private $token;
 	private $url = 'https://oauth.itau.com.br/identity/connect/token';
-	private $client_id = 'JeRNHwe_asdh0';
-	private $client_secret = '_CS1YIgcTt0YmETQKM277UsXZ97CUrBf6t6siSCB2Mau8rx-Yi2tvuFDfHn3asdWv26V_JaSuUuZuYv8lw0a7g2';
+	private $client_id = 'JeRNHwe_jq5h0';
+	private $client_secret = '_CS1YIgcTt0YmETQKM277UsXZ97CUrBf6t6siSCB2Mau8rx-Yi2tvuFDfHn3vMTWv26V_JaSuUuZuYv8lw0a7g2';
 
 	/**
 	* metodo de inicialização

@@ -6,6 +6,7 @@ include_once 'juros.php';
 include_once 'multa.php';
 include_once 'pagador.php';
 include_once 'moeda.php';
+include_once 'recebimentoDivergente.php';
 /**
 * CLASSE DO BOLETO
 **/
@@ -36,14 +37,14 @@ class boleto {
 	private $juros;
 	private $multa;
 	private $grupo_desconto;
+	private $recebimento_divergente;
 
 	public function getTipoAmbiente() {
-		return $this->tipo_produto;
+		return $this->tipo_ambiente;
 	}
 
-	public function setTipoAmbiente($tipo_produto) {
-		$this->tipo_produto = $tipo_produto;
-		return $this;
+	public function setTipoAmbiente($tipo_ambiente) {
+		$this->tipo_ambiente = $tipo_ambiente;
 	}
 
 	public function getTipoRegistro() {
@@ -52,7 +53,6 @@ class boleto {
 
 	public function setTipoRegistro($tipo_registro) {
 		$this->tipo_registro = $tipo_registro;
-		return $this;
 	}
 
 	public function getTipoCobranca() {
@@ -61,7 +61,6 @@ class boleto {
 
 	public function setTipoCobranca($tipo_cobranca) {
 		$this->tipo_cobranca = $tipo_cobranca;
-		return $this;
 	}
 
 	public function getTipoProduto() {
@@ -70,7 +69,6 @@ class boleto {
 
 	public function setTipoProduto($tipo_produto) {
 		$this->tipo_produto = $tipo_produto;
-		return $this;
 	}
 
 	public function getSubProduto() {
@@ -79,16 +77,14 @@ class boleto {
 
 	public function setSubProduto($subproduto) {
 		$this->subproduto = $subproduto;
-		return $this;
 	}
 
 	public function getBenefiriario() {
 		return $this->beneficiario;
 	}
 
-	public function setBenefiriario(Beneficiario $beneficiario = null) {
+	public function setBenefiriario($beneficiario) {
 		$this->beneficiario = $beneficiario;
-		return $this;
 	}
 
 	public function getTituloAceite() {
@@ -96,17 +92,15 @@ class boleto {
 	}
 
 	public function setTituloAceite($titulo_aceite) {
-		$this->setTituloAceite = $titulo_aceite;
-		return $this;
+		$this->titulo_aceite = $titulo_aceite;
 	}
 
 	public function getPagador() {
 		return $this->pagador;
 	}
 
-	public function setPagador(Pagador $pagador = null) {
+	public function setPagador( $pagador ) {
 		$this->pagador = $pagador;
-		return $this;
 	}
 
 	public function getTipoCarteiraTitulo() {
@@ -114,17 +108,15 @@ class boleto {
 	}
 
 	public function setTipoCarteiraTitulo($tipo_carteira_titulo) {
-		$this->setTipoCarteiraTitulo = $tipo_carteira_titulo;
-		return $this;
+		$this->tipo_carteira_titulo = $tipo_carteira_titulo;
 	}
 
 	public function getMoeda() {
 		return $this->moeda;
 	}
 
-	public function setMoeda(Moeda $moeda = null) {
+	public function setMoeda( $moeda ) {
 		$this->moeda = $moeda;
-		return $this;
 	}
 
 	public function getNossoNumero() {
@@ -133,7 +125,6 @@ class boleto {
 
 	public function setNossoNumero($nosso_numero) {
 		$this->nosso_numero = $nosso_numero;
-		return $this;
 	}
 	
 	public function getDigitoVerificadorNossoNumero() {
@@ -142,7 +133,6 @@ class boleto {
 
 	public function setDigitoVerificadorNossoNumero($digito_verificador_nosso_numero) {
 		$this->digito_verificador_nosso_numero = $digito_verificador_nosso_numero;
-		return $this;
 	}
 
 	public function getCodigoBarras() {
@@ -151,16 +141,14 @@ class boleto {
 
 	public function setCodigoBarras($codigo_barras) {
 		$this->codigo_barras = $codigo_barras;
-		return $this;
 	}
 
 	public function getDataVencimento()  {
-		return $data_vencimento;
+		return $this->data_vencimento;
 	}
 
 	public function setDataVencimento($data_vencimento)  {
 		$this->data_vencimento = $data_vencimento;
-		return $this;
 	}
 
 	public function getValorCobrado() {
@@ -169,7 +157,6 @@ class boleto {
 
 	public function setValorCobrado($valor_cobrado) {
 		$this->valor_cobrado = $valor_cobrado;
-		return $this;
 	}	
 
 	public function getSeuNumero() {
@@ -178,7 +165,6 @@ class boleto {
 
 	public function setSeuNumero($seu_numero) {
 		$this->seu_numero = $seu_numero;
-		return $this;
 	}
 
 	public function getEspecie() {
@@ -187,7 +173,6 @@ class boleto {
 
 	public function setEspecie($especie) {
 		$this->especie = $especie;
-		return $this;
 	}
 
 	public function getDataEmissao() {
@@ -196,16 +181,14 @@ class boleto {
 
 	public function setDataEmissao($data_emissao) {
 		$this->data_emissao = $data_emissao;
-		return $this;
 	}
 
 	public function getDataLimitePagamento() {
-		return $this->getDataLimitePagamento;
+		return $this->data_limite_pagamento;
 	}
 
-	public function setDataLimitePagamento($setDataLimitePagamento) {
-		$this->setDataLimitePagamento = $data_limite_pagamento;
-		return $this;
+	public function setDataLimitePagamento($data_limite_pagamento) {
+		$this->data_limite_pagamento = $data_limite_pagamento;
 	}
 
 	public function getTipoPagamento() {
@@ -214,7 +197,6 @@ class boleto {
 
 	public function setTipoPagamento($tipo_pagamento) {
 		$this->tipo_pagamento = $tipo_pagamento;
-		return $this;
 	}
 
 	public function getIndicadorPagamentoParcial() {
@@ -223,34 +205,38 @@ class boleto {
 
 	public function setIndicadorPagamentoParcial($indicador_pagamento_parcial) {
 		$this->indicador_pagamento_parcial = $indicador_pagamento_parcial;
-		return $this;
 	}
 
 	public function getGrupoDesconto() {
-		return $this->getGrupoDesconto;
+		return $this->grupo_desconto;
 	}
 
-	public function setGrupoDesconto(GrupoDesconto $setGrupoDesconto = null) {
-		$this->setGrupoDesconto = $setGrupoDesconto;
-		return $this;
+	public function setGrupoDesconto($grupo_desconto ) {
+		$this->grupo_desconto = $grupo_desconto;
 	}
 
 	public function getJuros() {
 		return $this->juros;
 	}
 
-	public function setJuros(Juros $juros = null) {
+	public function setJuros($juros ) {
 		$this->juros = $juros;
-		return $this;
 	}
 
 	public function getMulta() {
 		return $this->multa;
 	}
 
-	public function setMulta(Multa $multa = null) {
+	public function setMulta($multa) {
 		$this->multa = $multa;
-		return $this;
+	}
+
+	public function getRecebimentoDivergente() {
+		return $this->recebimento_divergente;
+	}
+
+	public function setRecebimentoDivergente($recebimento_divergente) {
+		$this->recebimento_divergente = $recebimento_divergente;
 	}
 
 

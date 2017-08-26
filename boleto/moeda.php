@@ -12,7 +12,6 @@ class Moeda {
 
 	public function setCodigoMoedaCnab($codigo_moeda_cnab) {
 		$this->codigo_moeda_cnab = $codigo_moeda_cnab;
-		return $this;
 	}
 
 }
