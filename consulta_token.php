@@ -4,14 +4,29 @@
 class ConsultaToken {
 
 	private $token;
-	private $url = 'https://oauth.itau.com.br/identity/connect/token';
-	private $client_id = 'JeRNHwe_jq5h0';
-	private $client_secret = '_CS1YIgcTt0YmETQKM277UsXZ97CUrBf6t6siSCB2Mau8rx-Yi2tvuFDfHn3vMTWv26V_JaSuUuZuYv8lw0a7g2';
+	private $url;
+	private $client_id;
+	private $client_secret;
 
 	/**
 	* metodo de inicialização
 	**/
-	public function __construct() {
+	public function __construct($tipo_ambiente, $client_secret, $client_id) {
+		$this->client_secret 	= $client_secret;
+		$this->client_id 		= $client_id;
+
+		//setando o tipo do ambiente
+		if($tipo_ambiente = 1) {
+			//ambiente desenvolvimento
+			$this->url = 'https://oauth.itau.com.br/identity/connect/token';
+		}else if($tipo_ambiente = 2)  {
+			//ambiente produção
+			$this->url = "https://autorizador-boletos.itau.com.br";
+		}else {
+			return json_encode(false);
+		}
+
+		//consultando token
 		$this->getRequestToken();
 	}
 
@@ -30,8 +45,7 @@ class ConsultaToken {
 			  CURLOPT_POSTFIELDS => "scope=readonly&grant_type=client_credentials&client_id=" . $this->client_id . "&client_secret=" . $this->client_secret,
 			  CURLOPT_HTTPHEADER => array(
 			    "cache-control: no-cache",
-			    "content-type: application/x-www-form-urlencoded",
-			    "postman-token: 39c418fa-d307-cfd5-27ee-18bb69f0ea40"
+			    "content-type: application/x-www-form-urlencoded"
 			  ),
 			));
 
@@ -41,7 +55,7 @@ class ConsultaToken {
 			curl_close($curl);
 
 			if ($err) {
-			  echo "cURL Error #:" . $err;
+			  echo "cURL Error # Token:" . $err;
 			} else {
 			  $this->setToken(json_decode($response));
 			}

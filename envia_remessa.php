@@ -1,5 +1,6 @@
 <?php
 include_once 'boleto/boleto.php';
+include_once 'consulta_token.php';
 /**
 * CLASSE DE REMESSA 
 **/
@@ -7,6 +8,21 @@ include_once 'boleto/boleto.php';
 class EnviaRemessa {
 
 	private $remessa = [];
+	private $token;
+	private $tipo_ambiente;
+	private $identificador;
+	private $itau_chave;
+
+	public function __construct($config) {
+		//setando token
+		$token = new ConsultaToken($config['tipo_ambiente'], $config['client_secret'], $config['client_id']);
+		$token = $token->getToken();
+
+		$this->token 			= $token->access_token;
+		$this->tipo_ambiente 	= $config['tipo_ambiente'];// 1 - PARA TESTES 2 - PARA PRODUÇÃO
+		$this->identificador 	= $config['identificador'];
+		$this->itau_chave 		= $config['itau_chave'];
+	}
 
 	
 	public function addBoleto($data = null) {
@@ -14,8 +30,7 @@ class EnviaRemessa {
 			//criando boleto
 			$boleto = new Boleto();
 
-
-			$boleto->setTipoAmbiente($data['tipo_ambiente']);
+			$boleto->setTipoAmbiente($this->tipo_ambiente);
 			$boleto->setTipoRegistro($data['tipo_registro']);
 			$boleto->setTipoCobranca($data['tipo_cobranca']);
 			$boleto->setTipoProduto($data['tipo_produto']);
@@ -96,6 +111,7 @@ class EnviaRemessa {
 
 			//adicionando boleto na remessa
 			$this->remessa[] = $boleto;
+			return true;
 		}else {
 			return false;
 		}
@@ -105,8 +121,58 @@ class EnviaRemessa {
 		return $this->remessa;
 	}
 
-	public function envia() {
-		
+	public function enviar() {
+		$curl = curl_init();
+
+		function objectToArrayF($object) {
+			if(!is_object($object) && !is_array($object)) {
+		        return $object;
+		    }
+
+		    $object = (array) $object;
+			$array = array();
+			foreach ($object as $k => $v) {
+			  $k = preg_match('/^\x00(?:.*?)\x00(.+)/', $k, $matches) ? $matches[1] : $k;
+			  $array[$k] = $v;
+			}
+
+		    return array_map('objectToArrayF', $array);
+		}
+
+		//setando boletos
+		$boletos = json_encode(objectToArrayF($this->getBoletos()[0]));//POR ENQUANTO ESTA ENVIANDO APENAS UM BOLETO POR VEZ NO ARRAY
+		$header = array(
+		    "accept: application/vnd.itau",
+		    "access_token: " . $this->token,
+		    "identificador: " . $this->identificador,
+		    "itau-chave: " . $this->itau_chave,
+		 );
+
+		//die(print_r($header));
+		//die(print_r($boletos));
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://gerador-boletos.itau.com.br/router-gateway-app/public/codigo_barras/registro",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "POST",
+		  CURLOPT_POSTFIELDS => $boletos,
+		  CURLOPT_HTTPHEADER => $header,
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		  return "cURL Error #:" . $err;
+		} else {
+			return json_decode($response);
+		}
 	}
 
 }
