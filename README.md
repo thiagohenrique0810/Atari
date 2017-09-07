@@ -1,7 +1,7 @@
 # Atari
 API DE TRANSMISSÃO AUTOMÁTICA DE REMESSA NO PADRÃO CNAB DE BOLETOS DO BANCO ITAÚ
 
-Para que a API funcione perfeitamente em seu server, é necessário que as extenções do seu php.ini para SSL estejam habilitadas, para isso você pode descomenta-las.
+##Para que a API funcione perfeitamente em seu server, é necessário que as extenções do seu php.ini para SSL estejam habilitadas, para isso você pode descomenta-las.
 ```INI
 
 #Antes
